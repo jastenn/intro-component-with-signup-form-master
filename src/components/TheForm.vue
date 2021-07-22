@@ -7,60 +7,96 @@
   </Pricing>
 
   <form :class="$style.form" @submit="submitHandler">
-    <InputText
+    <div
+      :class="$style.formControl"
       v-for="(input, idx) in inputFields"
-      :key="idx"
-      :name="input.name"
-      :type="input.type"
-      :placeholder="input.placeholder"
-      :value="input.value"
-      @update:input="updateInputState"
-    />
-    <SubmitButton @clicked="submitHandler"
-      >Claim your free trial</SubmitButton
+      :key="idx + 1"
     >
+      <input
+        :class="$style.input"
+        :name="input.name"
+        :type="input.type"
+        :placeholder="input.placeholder"
+        v-model="state[input.name]"
+        @input="v$[input.name].$reset()"
+      />
+
+      <div :class="$style.error" v-if="v$[input.name].$error">
+        <IconError :class="$style.errorIcon" />
+        <i
+          :class="$style.errorText"
+          v-for="(error, idx) in v$[input.name].$errors"
+          :key="idx * 51"
+        >
+          {{ error.$message }}
+        </i>
+      </div>
+    </div>
+
+    <SubmitButton @clicked="submitHandler">Claim your free trial</SubmitButton>
   </form>
 </template>
 
 <script>
-import { ref } from '@vue/reactivity';
+import { computed } from 'vue-demi';
+import { reactive } from '@vue/reactivity';
 import { useVuelidate } from '@vuelidate/core';
+import {
+  maxLength,
+  minLength,
+  required,
+  email,
+  alpha,
+} from '@vuelidate/validators';
+
 import Pricing from './BasePricing.vue';
-import InputText from './FormInputText.vue';
 import SubmitButton from './BaseButton.vue';
+import IconError from './icon/IconError.vue';
 
 export default {
   components: {
     Pricing,
-    InputText,
     SubmitButton,
+    IconError,
   },
 
   setup() {
-    const v$ = useVuelidate();
-    const state = ref({
+    const state = reactive({
       firstName: '',
       lastName: '',
       email: '',
       password: '',
     });
 
-    const updateInputState = (el) => {
-      state.value = {
-        ...state.value,
-        [el.name]: el.value,
-      };
-    };
+    const rules = computed(() => ({
+      firstName: {
+        required,
+        alpha,
+      },
+      lastName: {
+        required,
+        alpha,
+      },
+      email: {
+        email,
+        required,
+      },
+      password: {
+        required,
+        minLength: minLength(6),
+        maxLength: maxLength(18),
+      },
+    }));
+
+    const v$ = useVuelidate(rules, state);
 
     const submitHandler = (e) => {
+      console.log(v$.value);
+      v$.value.$touch();
       e.preventDefault();
-      console.log(`First Name: ${state.value.firstName}`);
-      console.log(`Last Name: ${state.value.lastName}`);
-      console.log(`Email:  ${state.value.email}`);
-      console.log(`Password: ${state.value.password}`);
     };
 
-    return { v$, state, updateInputState, submitHandler };
+    return { v$, state, submitHandler };
   },
 
   data() {
@@ -69,25 +105,21 @@ export default {
         {
           name: 'firstName',
           placeholder: 'First Name',
-          value: this.state.firstName,
           type: 'text',
         },
         {
           name: 'lastName',
           placeholder: 'Last Name',
-          value: this.state.lastName,
           type: 'text',
         },
         {
-          name: 'firstName',
+          name: 'email',
           placeholder: 'Email Address',
-          value: this.state.email,
-          type: 'email',
+          type: 'text',
         },
         {
           name: 'password',
           placeholder: 'Password',
-          value: this.state.password,
           type: 'password',
         },
       ],
@@ -108,5 +140,47 @@ export default {
 
 .form > * + * {
   margin-top: 1rem;
+}
+
+.input {
+  display: block;
+  padding: 1rem 1.125rem;
+  width: 100%;
+  border-radius: 0.4em;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  caret-color: var(--accent);
+
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+}
+
+.input:focus {
+  outline: none;
+  border: 1px solid var(--neutral-dark);
+}
+
+.formControl {
+  position: relative;
+}
+
+.error {
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.errorIcon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-87%);
+}
+
+.errorText {
+  color: var(--primary-red);
+  font-weight: 500;
+  font-size: 0.687rem;
+  margin-left: auto;
 }
 </style>

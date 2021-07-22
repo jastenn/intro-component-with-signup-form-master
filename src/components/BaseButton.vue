@@ -46,6 +46,12 @@ export default {
 
 .button:active {
   transform: translateY(0.15em);
-  box-shadow: 0 0.1em #3ed191, 0 0.125em #5bca9c;
+  box-shadow: 0 0.1em #3ed191, 0 0.175em #5bca9c;
+}
+
+.button:focus {
+  outline: none;
+  background-color: hsl(154, 73%, 59%);
+  box-shadow: 0 0.25em #3ed191, 0 0.325em #5bca9c;
 }
 </style>
