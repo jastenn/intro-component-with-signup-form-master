@@ -123,7 +123,7 @@ export default {
   width: 100%;
   background-color: white;
   border-radius: 0.875em;
-  padding: 1.5rem 1.5rem;
+  padding: clamp(1.5rem, 5vw, 2.5rem);
 
   box-shadow: 0 0.5em rgba(0, 0, 0, 0.15);
 }
@@ -147,7 +147,7 @@ export default {
 
 .input:focus {
   outline: none;
-  border: 1px solid var(--neutral-dark);
+  border: 1px solid var(--accent);
 }
 
 .formControl {
@@ -186,5 +186,11 @@ export default {
   font-weight: 700;
   color: var(--primary-red);
   text-decoration: none;
+}
+
+@media (min-width: 51.75em) {
+  .form {
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+  }
 }
 </style>

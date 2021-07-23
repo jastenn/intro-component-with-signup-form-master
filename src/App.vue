@@ -3,17 +3,20 @@
     <Header />
     <Form />
   </div>
+  <Attribution />
 </template>
 
 <script>
 import Header from './components/TheHeader.vue';
 import Form from './components/TheForm.vue';
+import Attribution from './components/Attribution.vue';
 
 export default {
   name: 'App',
   components: {
     Header,
     Form,
+    Attribution,
   },
 };
 </script>

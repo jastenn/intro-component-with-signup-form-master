@@ -35,19 +35,13 @@ export default {
   width: 100%;
   border: none;
   border-radius: 0.4em;
-  box-shadow: 0 0.25em #30ba7e, 0 0.325em #49ae84;
+  box-shadow: 0 0.2em #30ba7e, 0 0.275em #49ae84;
   transition: all 150ms ease-out;
 }
 
 .button:hover {
   background-color: hsl(154, 73%, 59%);
-  box-shadow: 0 0.25em #3ed191, 0 0.325em #5bca9c;
-}
-
-.button:focus {
-  outline: none;
-  background-color: hsl(154, 73%, 59%);
-  box-shadow: 0 0.25em #3ed191, 0 0.325em #5bca9c;
+  box-shadow: 0 0.2em #3ed191, 0 0.275em #5bca9c;
 }
 
 .button:active {
