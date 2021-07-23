@@ -1,40 +1,45 @@
 <template>
-  <Pricing>
-    <div>
-      <span style="font-weight: 700;">Try it free 7 days</span>
-      then $20/mo. thereafter
-    </div>
-  </Pricing>
-
-  <form :class="$style.form" @submit="submitHandler">
-    <div
-      :class="$style.formControl"
-      v-for="(input, idx) in inputFields"
-      :key="idx + 1"
-    >
-      <input
-        :class="$style.input"
-        :name="input.name"
-        :type="input.type"
-        :placeholder="input.placeholder"
-        v-model="state[input.name]"
-        @input="v$[input.name].$reset()"
-      />
-
-      <div :class="$style.error" v-if="v$[input.name].$error">
-        <IconError :class="$style.errorIcon" />
-        <i
-          :class="$style.errorText"
-          v-for="(error, idx) in v$[input.name].$errors"
-          :key="idx * 51"
-        >
-          {{ error.$message }}
-        </i>
+  <div :class="$style.col2">
+    <Pricing>
+      <div>
+        <span style="font-weight: 700;">Try it free 7 days </span>
+        then $20/mo. thereafter
       </div>
-    </div>
-
-    <SubmitButton @clicked="submitHandler">Claim your free trial</SubmitButton>
-  </form>
+    </Pricing>
+    <form :class="$style.form" @submit="submitHandler">
+      <div
+        :class="$style.formControl"
+        v-for="(input, idx) in inputForms"
+        :key="idx + 1"
+      >
+        <input
+          :class="$style.input"
+          :name="input.name"
+          :type="input.type"
+          :placeholder="input.placeholder"
+          v-model="state[input.name]"
+          @input="v$[input.name].$reset()"
+        />
+        <div :class="$style.error" v-if="v$[input.name].$error">
+          <IconError :class="$style.errorIcon" />
+          <i
+            :class="$style.errorText"
+            v-for="(error, idx) in v$[input.name].$errors"
+            :key="idx * 51"
+          >
+            {{ error.$message }}
+          </i>
+        </div>
+      </div>
+      <SubmitButton @clicked="submitHandler"
+        >Claim your free trial</SubmitButton
+      >
+      <p :class="$style.helperText">
+        By clicking the button, you are agreeing to our
+        <a href="#"> Terms and Services</a>
+      </p>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -52,6 +57,8 @@ import {
 import Pricing from './BasePricing.vue';
 import SubmitButton from './BaseButton.vue';
 import IconError from './icon/IconError.vue';
+
+import { inputForms } from '../data/inputForms';
 
 export default {
   components: {
@@ -91,39 +98,22 @@ export default {
     const v$ = useVuelidate(rules, state);
 
     const submitHandler = (e) => {
-      console.log(v$.value);
-      v$.value.$touch();
       e.preventDefault();
+
+      v$.value.$touch();
+      if (v$.value.$error) return;
+
+      console.log('Form is Valid');
+      console.log(state);
+
+      v$.value.$reset();
+      state.firstName = '';
+      state.lastName = '';
+      state.email = '';
+      state.password = '';
     };
 
-    return { v$, state, submitHandler };
-  },
-
-  data() {
-    return {
-      inputFields: [
-        {
-          name: 'firstName',
-          placeholder: 'First Name',
-          type: 'text',
-        },
-        {
-          name: 'lastName',
-          placeholder: 'Last Name',
-          type: 'text',
-        },
-        {
-          name: 'email',
-          placeholder: 'Email Address',
-          type: 'text',
-        },
-        {
-          name: 'password',
-          placeholder: 'Password',
-          type: 'password',
-        },
-      ],
-    };
+    return { v$, state, submitHandler, inputForms };
   },
 };
 </script>
@@ -182,5 +172,19 @@ export default {
   font-weight: 500;
   font-size: 0.687rem;
   margin-left: auto;
+}
+
+.helperText {
+  color: var(--neutral-light);
+  font-size: 0.6875rem;
+  text-align: center;
+  width: 80%;
+  margin: 1.5em auto 0 auto;
+}
+
+.helperText > a {
+  font-weight: 700;
+  color: var(--primary-red);
+  text-decoration: none;
 }
 </style>

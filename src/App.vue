@@ -53,13 +53,27 @@ body {
   font-weight: 400;
   color: var(--neutral-white);
 
-  background: var(--primary-red) url('./assets/bg-intro-desktop.png');
+  background: var(--primary-red) url('./assets/bg-intro-mobile.png') center;
   box-sizing: border-box;
 }
 
 .container {
   width: 88%;
   max-width: 69.38rem;
-  margin: 5.5rem auto 0 auto;
+  margin: 5.5rem auto 3rem auto;
+}
+
+@media (min-width: 51.75em) {
+  body {
+    background-image: url('./assets/bg-intro-desktop.png');
+  }
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .container > * {
+    width: 48%;
+  }
 }
 </style>
