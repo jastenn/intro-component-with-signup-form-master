@@ -69,7 +69,8 @@ export default {
   border: 1px solid var(--accent);
 }
 
-.input.invalid {
+.input.invalid,
+.input.invalid::placeholder {
   color: var(--primary-red);
 }
 
