@@ -8,7 +8,7 @@
 
 <script>
 import Header from './components/TheHeader.vue';
-import Form from './components/TheForm.vue';
+import Form from './components/Form.vue';
 import Attribution from './components/Attribution.vue';
 
 export default {

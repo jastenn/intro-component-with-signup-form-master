@@ -7,37 +7,17 @@
       </div>
     </Pricing>
     <form :class="$style.form" @submit="submitHandler">
-      <div
-        :class="$style.formControl"
+      <InputText
         v-for="(input, idx) in inputForms"
         :key="idx + 1"
-      >
-        <input
-          :class="$style.input"
-          :name="input.name"
-          :type="input.type"
-          :placeholder="input.placeholder"
-          v-model="state[input.name]"
-          @input="v$[input.name].$reset()"
-        />
-        <div :class="$style.error" v-if="v$[input.name].$error">
-          <IconError :class="$style.errorIcon" />
-          <i
-            :class="$style.errorText"
-            v-for="(error, idx) in v$[input.name].$errors"
-            :key="idx * 51"
-          >
-            {{ error.$message }}
-          </i>
-        </div>
-      </div>
-      <SubmitButton @clicked="submitHandler"
-        >Claim your free trial</SubmitButton
-      >
-      <p :class="$style.helperText">
-        By clicking the button, you are agreeing to our
-        <a href="#"> Terms and Services</a>
-      </p>
+        :input="input"
+        :vuelidate="v$"
+        v-model.trim="state[input.name]"
+      />
+      <SubmitButton @clicked="submitHandler">
+        Claim your free trial
+      </SubmitButton>
+      <Terms />
     </form>
   </div>
 </template>
@@ -55,16 +35,18 @@ import {
 } from '@vuelidate/validators';
 
 import Pricing from './BasePricing.vue';
+import InputText from './FormTextInput.vue';
 import SubmitButton from './BaseButton.vue';
-import IconError from './icon/IconError.vue';
+import Terms from './FormTerms.vue';
 
 import { inputForms } from '../data/inputForms';
 
 export default {
   components: {
     Pricing,
+    InputText,
     SubmitButton,
-    IconError,
+    Terms,
   },
 
   setup() {
@@ -130,62 +112,6 @@ export default {
 
 .form > * + * {
   margin-top: 1rem;
-}
-
-.input {
-  display: block;
-  padding: 1rem 1.125rem;
-  width: 100%;
-  border-radius: 0.4em;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  caret-color: var(--accent);
-
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: 600;
-}
-
-.input:focus {
-  outline: none;
-  border: 1px solid var(--accent);
-}
-
-.formControl {
-  position: relative;
-}
-
-.error {
-  margin: 0;
-  padding: 0;
-  display: flex;
-}
-
-.errorIcon {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-87%);
-}
-
-.errorText {
-  color: var(--primary-red);
-  font-weight: 500;
-  font-size: 0.687rem;
-  margin-left: auto;
-}
-
-.helperText {
-  color: var(--neutral-light);
-  font-size: 0.6875rem;
-  text-align: center;
-  width: 80%;
-  margin: 1.5em auto 0 auto;
-}
-
-.helperText > a {
-  font-weight: 700;
-  color: var(--primary-red);
-  text-decoration: none;
 }
 
 @media (min-width: 51.75em) {
